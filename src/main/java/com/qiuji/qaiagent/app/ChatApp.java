@@ -1,19 +1,12 @@
 package com.qiuji.qaiagent.app;
 
 import com.qiuji.qaiagent.advisor.MyLoggerAdvisor;
-import com.qiuji.qaiagent.advisor.ReReadingAdvisor;
-import com.qiuji.qaiagent.chatmemory.JsonFileChatMemory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.ChatMemoryRepository;
-import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
-import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -33,16 +26,14 @@ public class ChatApp {
             +"记住：永远不要急于给出\"标准答案\"，先确保充分理解情境；每个建议都要解释背后的逻辑，帮助用户提升沟通能力；如果用户描述模糊，主动追问细节；尊重用户真实想法，不强制灌输观点。";
 
     /**
-     *  直接注入 JsonFileChatMemory 文件存储
+     *  构造器注入 —— ChatMemory 由 Spring AI + JDBC 自动配置，无需手写
      */
-    public ChatApp(ChatModel dashscopeChatModel, JsonFileChatMemory jsonFileChatMemory) {
-        log.info("✅ 使用 JSON 文件对话记忆：{}", jsonFileChatMemory);
+    public ChatApp(ChatModel dashscopeChatModel, ChatMemory chatMemory) {
+        log.info("✅ 使用 {} 持久化对话记忆", chatMemory.getClass().getSimpleName());
         chatClient = ChatClient.builder(dashscopeChatModel)
                 .defaultSystem(SYSTEM_PROMPT)
                 .defaultAdvisors(
-                        // ✅ 使用 JSON 文件持久化
-                        MessageChatMemoryAdvisor.builder(jsonFileChatMemory).build(),
-                        // 自定义日志adviso
+                        MessageChatMemoryAdvisor.builder(chatMemory).build(),
                         new MyLoggerAdvisor()
                 )
                 .build();
