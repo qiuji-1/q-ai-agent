@@ -38,4 +38,11 @@ class ChatAppTest {
         ChatApp.ChatReport chatReport = chatApp.doChatWithReport(message,chatId);
         Assertions.assertNotNull(chatReport);
     }
+    @Test
+    void doChatWithRag(){
+        String chatId = UUID.randomUUID().toString();
+        String message = "今天我的朋友升职了，我该如何跟他聊天？";
+        String answer = chatApp.doChatWithRag(message, chatId);
+        Assertions.assertNotNull(answer);
+    }
 }
