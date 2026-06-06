@@ -95,8 +95,19 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--引入 DocumentReaders的markdown依赖-->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-markdown-document-reader</artifactId>
+            <version>1.1.7</version>
+        </dependency>
+        <!--引入 RAG 问答 Advisor 支持（QuestionAnswerAdvisor 所需的依赖） -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-advisors-vector-store</artifactId>
+            <version>1.1.7</version>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
