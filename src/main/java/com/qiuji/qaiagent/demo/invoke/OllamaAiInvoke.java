@@ -10,17 +10,17 @@ import org.springframework.stereotype.Component;
 /**
  * Sping Ai 框架调用 Ollama AI 大模型
  */
-@Component
+//@Component
 
-public class OllamaAiInvoke implements CommandLineRunner {
-    @Resource
-    private ChatModel ollamachatmodel;
+//public class OllamaAiInvoke implements CommandLineRunner {
+//    @Resource
+//    private ChatModel ollamachatmodel;
 
-    @Override
-    public void run(String... args) throws Exception {
-        AssistantMessage assistantMessage = ollamachatmodel.call(new Prompt("你好，我叫秋霁，你呢"))
-                .getResult()
-                .getOutput();
-        System.out.println(assistantMessage.getText());
-    }
-}
+//    @Override
+//    public void run(String... args) throws Exception {
+//        AssistantMessage assistantMessage = ollamachatmodel.call(new Prompt("你好，我叫秋霁，你呢"))
+//                .getResult()
+//                .getOutput();
+//        System.out.println(assistantMessage.getText());
+//    }
+//}

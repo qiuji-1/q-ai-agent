@@ -10,16 +10,16 @@ import org.springframework.stereotype.Component;
 /**
  * Sping Ai 框架调用 AI 大模型
  */
-@Component
-public class SpringAiAiInvoke implements CommandLineRunner {
-    @Resource
-    private ChatModel ddashscopeChatModel;
+//@Component
+//public class SpringAiAiInvoke implements CommandLineRunner {
+ //   @Resource
+ //   private ChatModel ddashscopeChatModel;
 
-    @Override
-    public void run(String... args) throws Exception {
-        AssistantMessage assistantMessage = ddashscopeChatModel.call(new Prompt("你好，我叫秋霁"))
-                .getResult()
-                .getOutput();
-        System.out.println(assistantMessage.getText());
-    }
-}
+  //  @Override
+ //   public void run(String... args) throws Exception {
+ //       AssistantMessage assistantMessage = ddashscopeChatModel.call(new Prompt("你好，我叫秋霁"))
+ //               .getResult()
+  //              .getOutput();
+  //      System.out.println(assistantMessage.getText());
+   // }
+//}
