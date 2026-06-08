@@ -107,6 +107,20 @@
             <artifactId>spring-ai-advisors-vector-store</artifactId>
             <version>1.1.7</version>
         </dependency>
+
+        <!-- iText PDF 生成库 -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext-core</artifactId>
+            <version>9.1.0</version>
+            <type>pom</type>
+        </dependency>
+        <!-- iText 中文字体支持 -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>font-asian</artifactId>
+            <version>9.1.0</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
