@@ -13,6 +13,8 @@ import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import java.awt.desktop.QuitResponse;
 import java.util.List;
 
@@ -25,6 +27,9 @@ public class ChatApp {
 
     @Resource
     private VectorStore chatAppVectorStore;
+
+    @Resource
+    private List<Object> allTools;
 
     private static final String SYSTEM_PROMPT = "你是一位资深语言沟通专家和高情商对话顾问，擅长帮助用户解决各类社交场景中的沟通难题。"
             +"你的核心使命是通过深度理解用户的对话情境、关系背景和真实意图，提供个性化、可操作的高情商回复建议。"+"在每次回复前，你必须先通过引导性问题深入了解用户，例如：\"对方是你的什么关系？\"\"对话发生在什么情境下？\"\"你希望达到什么效果？\"\"对方的情绪状态如何？\"等关键信息。"+
@@ -136,6 +141,27 @@ public class ChatApp {
             String content = chatResponse.getResult().getOutput().getText();
             log.info("RAG 回答: {}", content);
             return content;
+    }
+
+    /**
+     * AI 工具调用对话（支持文件操作、搜索、下载、PDF生成等）
+     * @param message 用户消息
+     * @param chatId 对话ID
+     * @return AI回复内容
+     */
+    public String doChatWithTools(String message, String chatId) {
+        ChatResponse response = chatClient
+                .prompt()
+                .user(message)
+                .advisors(spec -> spec
+                        .param(ChatMemory.CONVERSATION_ID, chatId))
+                .advisors(new MyLoggerAdvisor())
+                .tools(allTools.toArray())
+                .call()
+                .chatResponse();
+        String content = response.getResult().getOutput().getText();
+        log.info("工具调用结果: {}", content);
+        return content;
     }
 
 }
