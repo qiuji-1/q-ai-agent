@@ -1,6 +1,7 @@
-### CUSTOM ###
+### 不要提交包含敏感信息的配置文件 ###
 application-local.yml
 temp
+mcp-servers.json
 
 HELP.md
 target/
