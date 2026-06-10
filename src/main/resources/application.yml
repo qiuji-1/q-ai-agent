@@ -8,6 +8,15 @@ spring:
 #      base-url: http://localhost:11434
 #      chat:
 #        model: qwen3.5:4b
+    mcp:
+      client:
+        enabled: true
+        type: SYNC
+        request-timeout: 300s
+        toolcallback:
+          enabled: true
+        stdio:
+          servers-configuration: classpath:mcp-servers.json
 server:
   port: 8123
   servlet:
