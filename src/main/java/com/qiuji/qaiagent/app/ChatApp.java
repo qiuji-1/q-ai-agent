@@ -1,22 +1,21 @@
 package com.qiuji.qaiagent.app;
 
-import com.qiuji.qaiagent.advisor.MyLoggerAdvisor;
-import com.qiuji.qaiagent.rag.ChatAppDocumentLoader;
-import jakarta.annotation.Resource;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.qiuji.qaiagent.advisor.MyLoggerAdvisor;
 
-import java.awt.desktop.QuitResponse;
-import java.util.List;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
@@ -30,6 +29,9 @@ public class ChatApp {
 
     @Resource
     private List<Object> allTools;
+
+    @Resource
+    private ToolCallbackProvider toolCallbackProvider;
 
     private static final String SYSTEM_PROMPT = "你是一位资深语言沟通专家和高情商对话顾问，擅长帮助用户解决各类社交场景中的沟通难题。"
             +"你的核心使命是通过深度理解用户的对话情境、关系背景和真实意图，提供个性化、可操作的高情商回复建议。"+"在每次回复前，你必须先通过引导性问题深入了解用户，例如：\"对方是你的什么关系？\"\"对话发生在什么情境下？\"\"你希望达到什么效果？\"\"对方的情绪状态如何？\"等关键信息。"+
@@ -161,6 +163,33 @@ public class ChatApp {
                 .chatResponse();
         String content = response.getResult().getOutput().getText();
         log.info("工具调用结果: {}", content);
+        return content;
+    }
+
+    /**
+     * AI MCP 工具调用对话（通过 MCP 协议连接 GitHub ）
+     * 使用 ToolCallbackProvider 自动获取配置的 MCP 服务器提供的所有工具
+     * 
+     * @param message 用户消息
+     * @param chatId 对话ID
+     * @return AI回复内容
+     */
+    public String doChatWithMcp(String message, String chatId) {
+        log.info(" 开始 MCP 工具调用 - message: {}, chatId: {}", message, chatId);
+        
+        ChatResponse response = chatClient
+                .prompt()
+                .user(message)
+                .advisors(spec -> spec
+                        .param(ChatMemory.CONVERSATION_ID, chatId))
+                // 开启日志，便于观察效果
+                .advisors(new MyLoggerAdvisor())
+                .toolCallbacks(toolCallbackProvider.getToolCallbacks())  // 获取 MCP 动态工具列表
+                .call()
+                .chatResponse();
+        
+        String content = response.getResult().getOutput().getText();
+        log.info(" MCP 工具调用完成 - content: {}", content);
         return content;
     }
 
