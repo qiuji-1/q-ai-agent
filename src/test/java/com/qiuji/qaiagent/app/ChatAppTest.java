@@ -1,12 +1,12 @@
 package com.qiuji.qaiagent.app;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import jakarta.annotation.Resource;
-
-import java.util.UUID;
 
 
 @SpringBootTest
@@ -56,10 +56,45 @@ class ChatAppTest {
         // 测试 PDF 生成
         testMessage("请生成一份名为 'ai-report.pdf' 的PDF报告，内容为：人工智能发展趋势报告 - 2026年版");
     }
-
     private void testMessage(String message) {
         String chatId = UUID.randomUUID().toString();
         String answer = chatApp.doChatWithTools(message, chatId);
+        Assertions.assertNotNull(answer);
+    }
+    @Test
+    void doChatWithMcp(){
+        String chatId = UUID.randomUUID().toString();
+
+        // 测试 1：先查看仓库根目录结构（确认分支名）
+       // testMcpMessage(
+       //     "请列出 qiuji-1/q-ai-agent 仓库根目录的所有文件和文件夹（使用 master 分支）",
+       //     chatId
+       // );
+
+        // 测试 2：读取 ChatApp.java 文件
+      // testMcpMessage(
+       //     "请在 master 分支上读取 qiuji-1/q-ai-agent 仓库中 src/main/java/com/qiuji/qaiagent/app/ChatApp.java 文件的完整内容",
+      //      chatId
+     //   );
+        
+        // 测试 3：提交今天的代码
+       // testMcpMessage(
+       //     "请将以下内容提交到 qiuji-1/q-ai-agent 仓库的 src/test/mcp-test-result.txt 文件：" +
+       //     "'MCP 测试成功！\n测试时间：" + new java.util.Date() + "\n测试内容：验证 GitHub MCP 集成'",
+       //     chatId
+       // );
+
+        //测试4 图片搜索MCP
+        //testMcpMessage(
+        //        "请帮我搜索一些咖啡馆图片",
+        //        chatId
+        //);
+    }
+    private void testMcpMessage(String message, String chatId) {
+        System.out.println("用户请求: " + message);
+        String answer = chatApp.doChatWithMcp(message, chatId);
+        System.out.println("AI 回复: " + answer);
+        System.out.println("----------------------------------------");
         Assertions.assertNotNull(answer);
     }
 }
