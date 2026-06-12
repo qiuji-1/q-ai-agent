@@ -16,6 +16,7 @@ import com.qiuji.qaiagent.advisor.MyLoggerAdvisor;
 
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 
 @Component
 @Slf4j
@@ -100,6 +101,22 @@ public class ChatApp {
         String content = response.getResult().getOutput().getText();
         log.info("content: {}", content);
         return content;
+    }
+
+    /**
+     * AI 基础对话（SSE 流式输出）
+     * @param message 用户消息
+     * @param chatId  对话ID
+     * @return Flux<String> 流式文本块
+     */
+    public Flux<String> doChatByStream(String message, String chatId) {
+        return chatClient
+                .prompt()
+                .user(message)
+                .advisors(spec -> spec
+                        .param(ChatMemory.CONVERSATION_ID, chatId))
+                .stream()
+                .content();
     }
 
     record ChatReport(String title, List<String> suggest){
