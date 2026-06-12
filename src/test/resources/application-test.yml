@@ -1,0 +1,13 @@
+spring:
+  ai:
+    dashscope:
+      api-key: ${DASHSCOPE_API_KEY:sk-247b861d8f7f4637a04bac78dacf102d}
+      chat:
+        options:
+          model: qwen-max
+  searchapi:
+    api-key: ${SEARCH_API_KEY:LsmUsW3coEJ3FYKPH8uAzknV}
+server:
+  port: 8123
+  servlet:
+    context-path: /api
